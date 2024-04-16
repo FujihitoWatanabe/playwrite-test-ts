@@ -68,6 +68,16 @@ tests/
 - product.spec.js
 - checkout.spec.js
 
+コマンドを実行できるように package.json の scripts を下記のようにします。
+
+```
+  "scripts": {
+    "playwright": "playwright test",
+    "playwright:ui": "playwright test--ui",
+    "playwright:report": "playwright show-report"
+  },
+```
+
 テストを実行するには以下のコマンドを使用します。
 
 `npx playwright test`
