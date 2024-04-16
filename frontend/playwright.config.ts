@@ -1,4 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
+const { getFormattedDateTime } = require('./utils/datetime');
+import path from 'path';
 
 /**
  * Read environment variables from file.
@@ -20,7 +22,14 @@ export default defineConfig({
   /* Opt out of parallel tests on CI. */
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: [
+    [
+      'html',
+      {
+        outputFolder: path.join('./playwright-report', getFormattedDateTime()),
+      },
+    ],
+  ],
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -28,6 +37,15 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
+    // スクリーンショットの設定
+    screenshot: {
+      // スクリーンショットを撮るタイミング
+      // - 'only-on-failure'：テストが失敗した場合のみ
+      // - 'on'：常にスクリーンショットを撮る
+      mode: 'on',
+    },
+    //動画を記録
+    video: 'on',
   },
 
   /* Configure projects for major browsers */
@@ -58,14 +76,14 @@ export default defineConfig({
     // },
 
     /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    {
+      name: 'Microsoft Edge',
+      use: { ...devices['Desktop Edge'], channel: 'msedge' },
+    },
+    {
+      name: 'Google Chrome',
+      use: { ...devices['Desktop Chrome'], channel: 'chrome' },
+    },
   ],
 
   /* Run your local dev server before starting the tests */
